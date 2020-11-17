@@ -1,13 +1,92 @@
-﻿<Window x:Class="ClipboardImageSaver.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ClipboardImageSaver"
-        mc:Ignorable="d"
-        WindowStyle="ToolWindow"
-        Title="MainWindow" Height="400" Width="400">
+﻿<Window
+    x:Class="ClipboardImageSaver.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:ClipboardImageSaver"
+    mc:Ignorable="d"
+    WindowStyle="ToolWindow"
+    Title="MainWindow"
+    Height="400"
+    Width="400"
+    Loaded="OnWindowLoaded"
+    Icon="/Resource/Clipboard.ico">
     <Grid>
+        <Image
+            HorizontalAlignment="Left"
+            Height="100"
+            VerticalAlignment="Top"
+            Width="100"
+            Source="/Resource/Clipboard.ico" />
+
+        <StackPanel
+            Margin="0,100,200,0">
+            <CheckBox
+                x:Name="firstIsDown"
+                Content="First is Down"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Margin="10,8,10,10"
+                IsEnabled="False" />
+            <CheckBox
+                x:Name="firstIsToggled"
+                Content="First  is Toggled"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Margin="10,9,10,10"
+                IsEnabled="False" />
+            <CheckBox
+                x:Name="firstIsPreviousToggled"
+                Content="First was Toggled"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Margin="10,10,10,10"
+                IsEnabled="False" />
+            <CheckBox
+                x:Name="firstIsPressed"
+                Content="First is Pressed"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Margin="10,10,10,10"
+                IsEnabled="False" />
+            <Label
+                x:Name="countLabel"
+                Content="Label"
+                Margin="0,20,0,0" />
+        </StackPanel>
+
+        <StackPanel
+            Margin="200,100,0,0">
+            <CheckBox
+                x:Name="secondIsDown"
+                Content="Second is Down"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Margin="10,8,10,10"
+                IsEnabled="False" />
+            <CheckBox
+                x:Name="secondIsToggled"
+                Content="Second is Toggled"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Margin="10,9,10,10"
+                IsEnabled="False" />
+            <CheckBox
+                x:Name="secondIsPreviousToggled"
+                Content="Second was Toggled"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Margin="10,10,10,10"
+                IsEnabled="False" />
+            <CheckBox
+                x:Name="secondIsPressed"
+                Content="Second is Pressed"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Margin="10,10,10,10"
+                IsEnabled="False" />
+        </StackPanel>
 
     </Grid>
 </Window>

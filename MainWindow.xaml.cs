@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Forms;
+using System.ComponentModel;
 
 namespace ClipboardImageSaver
 {
@@ -21,11 +22,80 @@ namespace ClipboardImageSaver
     /// </summary>
     public partial class MainWindow : Window
     {
-        NotifyIcon notifyIcon = new NotifyIcon();
-             
+        NotifyIcon notifyIcon;
+        ContextMenuStrip notifyContextMenu;
+
         public MainWindow()
         {
             InitializeComponent();
+
+            CompositionTarget.Rendering += OnCompositionTargetRendering;
+            
+            notifyIcon = new NotifyIcon();
+            notifyContextMenu = new ContextMenuStrip();
+            notifyIcon.Icon = Properties.Resources.Clipboard;
+            notifyIcon.Visible = true;
+            notifyIcon.ContextMenuStrip = notifyContextMenu;
+            notifyIcon.Text = "Clipboard Image Saver";
+
+            notifyIcon.DoubleClick += OnNotifyIconDoubleClicked;
+
+            //this.Hide();
+
+            previousFirstKeyToggled = Keyboard.IsKeyToggled(firstKey);
+            previousSecondKeyToggled = Keyboard.IsKeyToggled(secondKey);
+
         }
+
+        bool previousFirstKeyToggled = true;
+        bool previousSecondKeyToggled = true;
+
+        Key firstKey = Key.S;
+        Key secondKey = Key.LeftAlt;
+
+        int count = 0;
+
+        private void OnCompositionTargetRendering(object sender, EventArgs e)
+        {
+            bool firstKeydown = Keyboard.IsKeyDown(firstKey) && previousFirstKeyToggled != Keyboard.IsKeyToggled(firstKey);
+            bool secondKeydown = Keyboard.IsKeyDown(secondKey) && previousSecondKeyToggled != Keyboard.IsKeyToggled(secondKey);
+
+            if(firstKeydown)
+                previousFirstKeyToggled = Keyboard.IsKeyToggled(firstKey);
+
+            if(secondKeydown)
+                previousSecondKeyToggled = Keyboard.IsKeyToggled(secondKey);
+
+            if((firstKeydown && Keyboard.IsKeyDown(secondKey)) || (secondKeydown && Keyboard.IsKeyDown(firstKey)))
+            {
+                count++;
+                //Activate;
+            }
+                
+
+            countLabel.Content = "Count: " + count;
+
+            firstIsDown.IsChecked = Keyboard.IsKeyDown(firstKey);
+            firstIsToggled.IsChecked = Keyboard.IsKeyToggled(firstKey);
+            firstIsPreviousToggled.IsChecked = previousFirstKeyToggled;
+            firstIsPressed.IsChecked = firstKeydown;
+            
+
+            secondIsDown.IsChecked = Keyboard.IsKeyDown(secondKey);
+            secondIsToggled.IsChecked = Keyboard.IsKeyToggled(secondKey);
+            secondIsPreviousToggled.IsChecked = previousSecondKeyToggled;
+            secondIsPressed.IsChecked = secondKeydown;
+        }
+
+        private void OnNotifyIconDoubleClicked(object sender, EventArgs e)
+        {
+            this.Show();
+        }
+
+        private void OnWindowLoaded(object sender, RoutedEventArgs e)
+        {
+
+        }
+
     }
 }
