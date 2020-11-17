@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Forms;
 using System.ComponentModel;
+using System.Drawing.Imaging;
 
 namespace ClipboardImageSaver
 {
@@ -25,12 +26,16 @@ namespace ClipboardImageSaver
         NotifyIcon notifyIcon;
         ContextMenuStrip notifyContextMenu;
 
+        ClipboardHelper clipboardHelper;
+
         public MainWindow()
         {
             InitializeComponent();
 
+            clipboardHelper = new ClipboardHelper("Screenshot", @"C:\Users\leehs\Pictures\Screenshots", ImageFormat.Png);
+
             CompositionTarget.Rendering += OnCompositionTargetRendering;
-            
+
             notifyIcon = new NotifyIcon();
             notifyContextMenu = new ContextMenuStrip();
             notifyIcon.Icon = Properties.Resources.Clipboard;
@@ -40,7 +45,7 @@ namespace ClipboardImageSaver
 
             notifyIcon.DoubleClick += OnNotifyIconDoubleClicked;
 
-            //this.Hide();
+            this.Hide();
 
             previousFirstKeyToggled = Keyboard.IsKeyToggled(firstKey);
             previousSecondKeyToggled = Keyboard.IsKeyToggled(secondKey);
@@ -69,9 +74,10 @@ namespace ClipboardImageSaver
             if((firstKeydown && Keyboard.IsKeyDown(secondKey)) || (secondKeydown && Keyboard.IsKeyDown(firstKey)))
             {
                 count++;
+                clipboardHelper.SaveClipboardImage();
                 //Activate;
             }
-                
+
 
             countLabel.Content = "Count: " + count;
 
@@ -79,7 +85,7 @@ namespace ClipboardImageSaver
             firstIsToggled.IsChecked = Keyboard.IsKeyToggled(firstKey);
             firstIsPreviousToggled.IsChecked = previousFirstKeyToggled;
             firstIsPressed.IsChecked = firstKeydown;
-            
+
 
             secondIsDown.IsChecked = Keyboard.IsKeyDown(secondKey);
             secondIsToggled.IsChecked = Keyboard.IsKeyToggled(secondKey);
