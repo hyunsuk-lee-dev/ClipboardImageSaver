@@ -63,9 +63,19 @@ namespace ClipboardImageSaver.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        internal static System.Drawing.Icon Clipboard {
+        internal static System.Drawing.Icon ClipboardBlack {
             get {
-                object obj = ResourceManager.GetObject("Clipboard", resourceCulture);
+                object obj = ResourceManager.GetObject("ClipboardBlack", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon ClipboardWhite {
+            get {
+                object obj = ResourceManager.GetObject("ClipboardWhite", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }

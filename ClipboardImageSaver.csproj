@@ -5,15 +5,15 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
-    <ApplicationIcon>Resource\Clipboard.ico</ApplicationIcon>
+    <ApplicationIcon>Resource\ClipboardBlack.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resource\Clipboard.ico" />
+    <None Remove="Resource\ClipboardBlack.ico" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resource\Clipboard.ico" />
+    <Resource Include="Resource\ClipboardBlack.ico" />
   </ItemGroup>
 
   <ItemGroup>

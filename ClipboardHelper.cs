@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
@@ -10,10 +11,12 @@ namespace ClipboardImageSaver
 {
     public class ClipboardHelper
     {
+        const int hello = 3;
 
 
         public string prefix;
         public string path;
+
 
         public string FileName
         {
@@ -33,11 +36,13 @@ namespace ClipboardImageSaver
             this.imageFormat = imageFormat ?? throw new ArgumentNullException(nameof(imageFormat));
         }
 
+
         public void SaveClipboardImage()
         {
             if(Clipboard.ContainsImage())
             {
                 Clipboard.GetImage().Save(FileName, imageFormat);
+                Process.Start("explorer.exe" , path);
             }
         }
     }

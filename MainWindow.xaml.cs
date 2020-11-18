@@ -15,6 +15,8 @@ using System.Windows.Shapes;
 using System.Windows.Forms;
 using System.ComponentModel;
 using System.Drawing.Imaging;
+using Application = System.Windows.Forms.Application;
+using Microsoft.Win32;
 
 namespace ClipboardImageSaver
 {
@@ -30,15 +32,30 @@ namespace ClipboardImageSaver
 
         public MainWindow()
         {
+            string RegistryKey = @"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize";
+            int theme;
+            theme = (int)Registry.GetValue(RegistryKey, "SystemUsesLightTheme", string.Empty);
+            
+            
+            Console.WriteLine(theme);
+
             InitializeComponent();
 
             clipboardHelper = new ClipboardHelper("Screenshot", @"C:\Users\leehs\Pictures\Screenshots", ImageFormat.Png);
 
             CompositionTarget.Rendering += OnCompositionTargetRendering;
 
-            notifyIcon = new NotifyIcon();
             notifyContextMenu = new ContextMenuStrip();
-            notifyIcon.Icon = Properties.Resources.Clipboard;
+
+            ToolStripMenuItem exitItem = new ToolStripMenuItem("Exit");
+            exitItem.Click += OnExitItemClicked;
+
+            notifyContextMenu.Items.Add(exitItem);
+
+
+            notifyIcon = new NotifyIcon();
+            
+            notifyIcon.Icon =  theme == 1 ? Properties.Resources.ClipboardBlack : Properties.Resources.ClipboardWhite;
             notifyIcon.Visible = true;
             notifyIcon.ContextMenuStrip = notifyContextMenu;
             notifyIcon.Text = "Clipboard Image Saver";
@@ -50,6 +67,12 @@ namespace ClipboardImageSaver
             previousFirstKeyToggled = Keyboard.IsKeyToggled(firstKey);
             previousSecondKeyToggled = Keyboard.IsKeyToggled(secondKey);
 
+        }
+
+        private void OnExitItemClicked(object sender, EventArgs e)
+        {
+            notifyIcon.Dispose();
+            this.Close();
         }
 
         bool previousFirstKeyToggled = true;

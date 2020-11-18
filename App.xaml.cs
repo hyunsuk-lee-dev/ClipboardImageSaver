@@ -13,5 +13,6 @@ namespace ClipboardImageSaver
     /// </summary>
     public partial class App : Application
     {
+        
     }
 }

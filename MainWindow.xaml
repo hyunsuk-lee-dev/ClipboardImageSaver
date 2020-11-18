@@ -7,18 +7,20 @@
     xmlns:local="clr-namespace:ClipboardImageSaver"
     mc:Ignorable="d"
     WindowStyle="ToolWindow"
-    Title="MainWindow"
+    Title="Clipboard Saver"
     Height="400"
     Width="400"
     Loaded="OnWindowLoaded"
-    Icon="/Resource/Clipboard.ico">
+    Icon="/Resource/ClipboardBlack.ico"
+    ResizeMode="NoResize"
+    ShowInTaskbar="False">
     <Grid>
         <Image
             HorizontalAlignment="Left"
             Height="100"
             VerticalAlignment="Top"
             Width="100"
-            Source="/Resource/Clipboard.ico" />
+            Source="/Resource/ClipboardBlack.ico" />
 
         <StackPanel
             Margin="0,100,200,0">
