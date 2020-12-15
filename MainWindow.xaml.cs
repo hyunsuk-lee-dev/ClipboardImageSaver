@@ -25,24 +25,26 @@ namespace ClipboardImageSaver
     /// </summary>
     public partial class MainWindow : Window
     {
+        readonly string ThemeRegistryKey = @"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize";
+        readonly Key firstKey = Key.S;
+        readonly Key secondKey = Key.LeftAlt;
+
         NotifyIcon notifyIcon;
         ContextMenuStrip notifyContextMenu;
-
         ClipboardHelper clipboardHelper;
+        bool previousFirstKeyToggled = true;
+        bool previousSecondKeyToggled = true;
+
+        
 
         public MainWindow()
         {
-            string RegistryKey = @"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize";
-            int theme;
-            theme = (int)Registry.GetValue(RegistryKey, "SystemUsesLightTheme", string.Empty);
             
-            
-            Console.WriteLine(theme);
-
             InitializeComponent();
 
             clipboardHelper = new ClipboardHelper("Screenshot", @"C:\Users\leehs\Pictures\Screenshots", ImageFormat.Png);
 
+            // Capture Keyobard input for using short-cut key.
             CompositionTarget.Rendering += OnCompositionTargetRendering;
 
             notifyContextMenu = new ContextMenuStrip();
@@ -52,9 +54,12 @@ namespace ClipboardImageSaver
 
             notifyContextMenu.Items.Add(exitItem);
 
-
             notifyIcon = new NotifyIcon();
+
             
+            // 0 is Dark, 1 is Light.
+            int theme = (int)Registry.GetValue(ThemeRegistryKey, "SystemUsesLightTheme", string.Empty);
+
             notifyIcon.Icon =  theme == 1 ? Properties.Resources.ClipboardBlack : Properties.Resources.ClipboardWhite;
             notifyIcon.Visible = true;
             notifyIcon.ContextMenuStrip = notifyContextMenu;
@@ -62,26 +67,11 @@ namespace ClipboardImageSaver
 
             notifyIcon.DoubleClick += OnNotifyIconDoubleClicked;
 
-            this.Hide();
+            Hide();
 
             previousFirstKeyToggled = Keyboard.IsKeyToggled(firstKey);
             previousSecondKeyToggled = Keyboard.IsKeyToggled(secondKey);
-
         }
-
-        private void OnExitItemClicked(object sender, EventArgs e)
-        {
-            notifyIcon.Dispose();
-            this.Close();
-        }
-
-        bool previousFirstKeyToggled = true;
-        bool previousSecondKeyToggled = true;
-
-        Key firstKey = Key.S;
-        Key secondKey = Key.LeftAlt;
-
-        int count = 0;
 
         private void OnCompositionTargetRendering(object sender, EventArgs e)
         {
@@ -96,34 +86,21 @@ namespace ClipboardImageSaver
 
             if((firstKeydown && Keyboard.IsKeyDown(secondKey)) || (secondKeydown && Keyboard.IsKeyDown(firstKey)))
             {
-                count++;
                 clipboardHelper.SaveClipboardImage();
-                //Activate;
             }
 
+        }
 
-            countLabel.Content = "Count: " + count;
-
-            firstIsDown.IsChecked = Keyboard.IsKeyDown(firstKey);
-            firstIsToggled.IsChecked = Keyboard.IsKeyToggled(firstKey);
-            firstIsPreviousToggled.IsChecked = previousFirstKeyToggled;
-            firstIsPressed.IsChecked = firstKeydown;
-
-
-            secondIsDown.IsChecked = Keyboard.IsKeyDown(secondKey);
-            secondIsToggled.IsChecked = Keyboard.IsKeyToggled(secondKey);
-            secondIsPreviousToggled.IsChecked = previousSecondKeyToggled;
-            secondIsPressed.IsChecked = secondKeydown;
+        private void OnExitItemClicked(object sender, EventArgs e)
+        {
+            notifyIcon.Dispose();
+            Close();
+            Application.Exit();
         }
 
         private void OnNotifyIconDoubleClicked(object sender, EventArgs e)
         {
-            this.Show();
-        }
-
-        private void OnWindowLoaded(object sender, RoutedEventArgs e)
-        {
-
+            //Show();
         }
 
     }
