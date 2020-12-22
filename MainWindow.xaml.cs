@@ -1,54 +1,46 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Forms;
-using System.ComponentModel;
 using System.Drawing.Imaging;
 using Application = System.Windows.Forms.Application;
 using Microsoft.Win32;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
-using System.Windows.Forms.VisualStyles;
 
 namespace ClipboardImageSaver
 {
-
-
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
-
+        #region Readonly Variable
         private readonly int hotkeyId = 31197;
         private readonly uint altModifier = 0x0001;
         private readonly uint virtualKeyS = 0x53;
-        private readonly string ThemeRegistryKey = @"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize";
+        private readonly string themeRegistryKey = @"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize";
+        #endregion
 
+        #region Private Variable
         private NotifyIcon notifyIcon;
         private ContextMenuStrip notifyContextMenu;
         private ClipboardHelper clipboardHelper;
 
         private HwndSource hwndSource;
         private WindowInteropHelper helper;
+        #endregion
 
+        #region Properties
+        // If registry key value is 0, theme is dark, else if value is 1, then light.
+        bool IsLightTheme { get => (int)Registry.GetValue(themeRegistryKey, "SystemUsesLightTheme", string.Empty) == 1; } 
+        #endregion
+
+        #region Interop Method
         // DLL libraries used to manage hotkeys
         [DllImport("user32.dll")]
         public static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vlc);
         [DllImport("user32.dll")]
         public static extern bool UnregisterHotKey(IntPtr hWnd, int id);
+        #endregion
 
+        #region Constructor
         public MainWindow()
         {
             InitializeComponent();
@@ -59,29 +51,28 @@ namespace ClipboardImageSaver
 
             ToolStripMenuItem exitItem = new ToolStripMenuItem("Exit");
             exitItem.Click += OnExitItemClicked;
-
             notifyContextMenu.Items.Add(exitItem);
 
             notifyIcon = new NotifyIcon();
 
-            // 0 is Dark, 1 is Light.
-            int theme = (int)Registry.GetValue(ThemeRegistryKey, "SystemUsesLightTheme", string.Empty);
-
-            notifyIcon.Icon = theme == 1 ? Properties.Resources.ClipboardBlack : Properties.Resources.ClipboardWhite;
+            // If theme is light, use black icon, else use white icon.
+            notifyIcon.Icon = IsLightTheme ? Properties.Resources.ClipboardBlack : Properties.Resources.ClipboardWhite;
             notifyIcon.Visible = true;
             notifyIcon.ContextMenuStrip = notifyContextMenu;
             notifyIcon.Text = "Clipboard Image Saver";
 
             notifyIcon.DoubleClick += OnNotifyIconDoubleClicked;
         }
+        #endregion
 
+        #region Protected Methods
         protected override void OnSourceInitialized(EventArgs e)
         {
             base.OnSourceInitialized(e);
 
             helper = new WindowInteropHelper(this);
             hwndSource = HwndSource.FromHwnd(helper.Handle);
-            hwndSource.AddHook(new HwndSourceHook(HwndHook));
+            hwndSource.AddHook(HwndHook);
             RegisterHotKey();
         }
 
@@ -90,14 +81,17 @@ namespace ClipboardImageSaver
             base.OnActivated(e);
             Hide();
         }
+
         protected override void OnClosed(EventArgs e)
         {
-            hwndSource.RemoveHook(new HwndSourceHook(HwndHook));
+            hwndSource.RemoveHook(HwndHook);
             hwndSource = null;
             UnregisterHotKey();
             base.OnClosed(e);
         }
+        #endregion
 
+        #region Private Methods
         private void RegisterHotKey()
         {
             RegisterHotKey(helper.Handle, hotkeyId, altModifier, virtualKeyS);
@@ -137,6 +131,6 @@ namespace ClipboardImageSaver
         {
             //Show();
         }
-
+        #endregion
     }
 }
