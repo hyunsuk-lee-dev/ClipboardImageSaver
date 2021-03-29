@@ -44,7 +44,13 @@ namespace ClipboardImageSaver
             if(Clipboard.ContainsImage())
             {
                 Clipboard.GetImage().Save(FileName, imageFormat);
-                Process.Start("explorer.exe", path);
+
+                ProcessStartInfo explorerProcess = new ProcessStartInfo();
+                explorerProcess.FileName = path;
+                explorerProcess.Verb = "open";
+                explorerProcess.UseShellExecute = true;
+                Process.Start(explorerProcess);
+
                 Clipboard.SetText(path);
             }
         }
